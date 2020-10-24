@@ -970,7 +970,7 @@ Resources:
             Resource:
               - !Join 
                 - ''
-                - - 'arn:aws:firehose:::deliverystream/'
+                - - !Sub 'arn:aws:firehose:${AWS::Region}:${AWS::AccountId}:deliverystream/'
                   - !Ref MacieFindingsDeliveryStream
       Roles:
         - !Ref EventDeliveryRole
