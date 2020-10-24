@@ -129,7 +129,7 @@ Once that your job has complete, you can select the check box of the job and cli
 _Note: You can navigate in the findings and click in the each checkbox and see the details._
 
 
-## Exploring Macie Results using SQL on Amazon Athena
+## Exploring Macie Fidings using SQL with Amazon Athena
 
 1.	Go to the [Athena console](https://console.aws.amazon.com/athena/home?region=us-east-1#query) and open the **Query editor**.
 2.	It will show a message **Before you run your first query, you need to set up a query result location in Amazon S3. Learn more**. Click in the message link.
