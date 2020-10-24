@@ -13,7 +13,7 @@ The architecture workflow contains the following steps:
 1.	**ClassicModels** relational database on **RDS for MySQL**.
 2.	**DMS task** that connect to **Classic Models database** and transforms the data into several CSV files and load them into a **S3 bucket**.
 3.	Once the DMS task has succeed, a **Macie classification job** will start to discover the data and put the results into another S3 bucket.
-4.	Once the classification job results are delivered, an S3 SRR (Sample-region Replication) will replicate the job results objects to an staging bucket that will start an event that invokes a Lambda Function, this function will start an **ETL job** from Glue and transform the JSON file into **Parquet** and deliver into the data lake bucket.
+4.	Once the classification job are done, the Data Discovery Results will be delivered to an S3 Bucket and the **Macie Findings** to another S3 Bucket, using **Amazon Kinesis Data Firehose**. Once the findings are in the landing bucket, it will start an event that invokes a **Lambda Function** that starts a **Glue Workflow** and transform the JSON file into **Parquet** and deliver into the curated bucket.
 5.	Once the ETL job has succeed, it’s time to run **SQL queries** using Amazon Athena.
 
 To get started you will need an IAM user with the following access:
@@ -26,6 +26,7 @@ To get started you will need an IAM user with the following access:
 - Amazon S3
 - Amazon Glue
 - Amazon EC2
+- Amazon Kinesis Data Firehose
 
 _Note: Tested in the N. Virginia region (us-east-1)._
 
@@ -54,7 +55,7 @@ Macie is now enabled and has begun to collect information about the S3 buckets i
 2. Once your envionment was open, select the **bash** tab and execute the following commands:
 
 ```
-git clone https://github.com/brunormsilveira/data-classification-pipeline.git
+git clone https://github.com/aws-samples/data-classification-pipeline.git
 
 aws s3 mb s3://<SAM_BUCKET_NAME>
 cd data-classification-pipeline/
@@ -138,7 +139,7 @@ _Note: You can navigate in the findings and click in the each checkbox and see t
 
 
 ```
-SELECT severity.description as severity, accountid, region, resourcesAffected FROM dcp.dcp-glue-curated;
+SELECT detail.type as Type, detail.severity.description as severity, detail.resourcesaffected.s3bucket.name as resourcesaffected FROM "dcp"."dcp_glue_curated_[REGION]_[ACCOUNTID]";
   
 ```
 
@@ -146,12 +147,12 @@ SELECT severity.description as severity, accountid, region, resourcesAffected FR
 
 ![SQL Query Results Example](./images/athena-sql-results.png)
 
-_Note: Now you can start to run SQL query in your Macie Results._
+_Note: Now you can start to run SQL query in your Macie Findings._
 
 ## Clean up
 1. Delete the solution stack in the following order: **Disable Amazon Macie**.
 2. Open the CloudFormation console at https://console.aws.amazon.com/cloudformation.
-3. Select **XXX** Stack and click on **Delete** button.
+3. Select the Stack and click on **Delete** button.
 
 
 ## Reference links
