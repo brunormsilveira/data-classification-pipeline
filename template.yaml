@@ -384,10 +384,7 @@ Resources:
     Type: AWS::KinesisFirehose::DeliveryStream
     Properties:
       ExtendedS3DestinationConfiguration:
-        BucketARN: !Join 
-          - ''
-          - - 'arn:aws:s3:::'
-            - !Ref GlueLandingBucket
+        BucketARN: !Sub 'arn:aws:s3:::${GlueLandingBucket}'
         BufferingHints:
           IntervalInSeconds: '60'
           SizeInMBs: '1'
@@ -930,15 +927,8 @@ Resources:
               - 's3:ListBucketMultipartUploads'
               - 's3:PutObject'
             Resource:
-              - !Join 
-                - ''
-                - - 'arn:aws:s3:::'
-                  - !Ref GlueLandingBucket
-              - !Join 
-                - ''
-                - - 'arn:aws:s3:::'
-                  - !Ref GlueLandingBucket
-                  - '/*'
+              - !Sub 'arn:aws:s3:::${GlueLandingBucket}'
+              - !Sub 'arn:aws:s3:::${GlueLandingBucket}/*'
       Roles:
         - !Ref DeliveryRole
         
@@ -948,14 +938,11 @@ Resources:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Sid: ''
-            Effect: Allow
+          - Effect: Allow
             Principal:
               Service: events.amazonaws.com
             Action: 'sts:AssumeRole'
-            Condition:
-              StringEquals:
-                'sts:ExternalId': !Ref 'AWS::AccountId'
+
   EventDeliveryPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -968,10 +955,7 @@ Resources:
               - 'firehose:PutRecord'
               - 'firehose:PutRecordBatch'
             Resource:
-              - !Join 
-                - ''
-                - - !Sub 'arn:aws:firehose:${AWS::Region}:${AWS::AccountId}:deliverystream/'
-                  - !Ref MacieFindingsDeliveryStream
+              - !Sub 'arn:aws:firehose:${AWS::Region}:${AWS::AccountId}:deliverystream/${MacieFindingsDeliveryStream}'
       Roles:
         - !Ref EventDeliveryRole
 
