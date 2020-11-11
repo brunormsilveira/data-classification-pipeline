@@ -72,12 +72,8 @@ Parameters:
     AllowedPattern: '[a-zA-Z0-9]*'
     ConstraintDescription: must contain only alphanumeric characters.
   DBName:
-    Default: classicmodels
+    Default: sakila
     Description: DB Name
-    Type: String
-  DBScript:
-    Default: https://raw.githubusercontent.com/tgpadua/temp/main/classicmodels.sql
-    Description: DB Load Script
     Type: String
 
 Resources:
@@ -461,9 +457,12 @@ Resources:
           !Sub |
             #!/bin/bash
             sudo yum install -y mysql
-            curl ${DBScript} > /tmp/script.sql
-            mysql -u ${DBUser} -p${DBPassword} -h ${MySQLDB.Endpoint.Address} -P ${MySQLDB.Endpoint.Port} ${DBName} < /tmp/script.sql
-            sudo shutdown -h now
+            cd /tmp
+            wget https://downloads.mysql.com/docs/sakila-db.tar.gz
+            tar -zxvf sakila-db.tar.gz
+            mysql -u ${DBUser} -p${DBPassword} -h ${MySQLDB.Endpoint.Address} -P ${MySQLDB.Endpoint.Port} < sakila-db/sakila-schema.sql
+            mysql -u ${DBUser} -p${DBPassword} -h ${MySQLDB.Endpoint.Address} -P ${MySQLDB.Endpoint.Port} < sakila-db/sakila-data.sql
+            sudo shutdown -h now            
       Tags:
         - Key: Name
           Value: !Sub '${Prefix}-RDS-Loader'
