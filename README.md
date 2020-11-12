@@ -10,8 +10,8 @@ and also will use AWS Glue and Amazon Athena to simplify the audit assessments o
 
 The architecture workflow contains the following steps:
 
-1.	**ClassicModels** relational database on **RDS for MySQL**.
-2.	**DMS task** that connect to **Classic Models database** and transforms the data into several CSV files and load them into a **S3 bucket**.
+1.	**Sakila** relational database on **RDS for MySQL**.
+2.	**DMS task** that connect to **Sakila database** and transforms the data into several CSV files and load them into a **S3 bucket**.
 3.	Once the DMS task has succeed, a **Macie classification job** will start to discover the data and put the results into another S3 bucket.
 4.	Once the classification job are done, the Data Discovery Results will be delivered to an S3 Bucket and the **Macie Findings** to another S3 Bucket, using **Amazon Kinesis Data Firehose**. Once the findings are in the landing bucket, it will start an event that invokes a **Lambda Function** that starts a **Glue Workflow** and transform the JSON file into **Parquet** and deliver into the curated bucket.
 5.	Once the ETL job has succeed, it’s time to run **SQL queries** using Amazon Athena.
@@ -56,11 +56,9 @@ Macie is now enabled and has begun to collect information about the S3 buckets i
 
 ```
 git clone https://github.com/aws-samples/data-classification-pipeline.git
-cd data-classification-pipeline/create-glue-script
-npm install
-cd ..
-aws s3 mb s3://<SAM_BUCKET_NAME>
-sam deploy --s3-bucket <SAM_BUCKET_NAME> --parameter-overrides DBPassword=<DB_PASSWORD> --stack-name data-classication-pipeline --capabilities CAPABILITY_NAMED_IAM
+cd data-classification-pipeline/deploy
+./deploy.sh <DB_PASSWORD> <STACKNAME>
+
 ```
 
 
@@ -80,15 +78,13 @@ _Note: when the task status turn to **Load complete**, it's time to check your o
 3. Check if the bucket has this folder hierarchy:
 
 ```
-classicmodels:
-  customers
-  employees
-  offices
-  orderdetails
-  orders
-  payments
-  productlines
-  products
+sakila:
+  actor
+  address
+  category
+  city
+  country
+  customer
 
 ```
 _Note: If is all ok, let's go to Amazon Macie._
