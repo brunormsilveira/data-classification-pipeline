@@ -56,8 +56,12 @@ Macie is now enabled and has begun to collect information about the S3 buckets i
 
 ```
 git clone https://github.com/aws-samples/data-classification-pipeline.git
-cd data-classification-pipeline/deploy
-./deploy.sh <DB_PASSWORD> <STACKNAME>
+cd data-classification-pipeline/start-glue-job
+npm install
+cd ../
+aws s3 mb s3://<SAM_BUCKET_NAME>
+sam deploy –-stack-name <STACK-NAME> --capabilities CAPABILITY_NAMED_IAM --s3-bucket <SAM_BUCKET_NAME> --parameter-overrides DBPassword=<DB_PASSWORD>
+
 
 ```
 
