@@ -126,7 +126,7 @@ _Note: If is all ok, let's go to Amazon Macie._
 
 Once that your job has complete, you can select the check box of the job and click on **Show results** and select **Show findings** that will open the findings of the job.
 
-![example](images/jobresults.png)
+![example](images/MacieFindings.png)
 
 _Note: You can navigate in the findings and click in the each checkbox and see the details._
 
