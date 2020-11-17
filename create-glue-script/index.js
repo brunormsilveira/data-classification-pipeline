@@ -9,7 +9,7 @@ const GLUE_CURATED_BUCKET = process.env.GLUE_CURATED_BUCKET;
 const GLUE_ASSETS_BUCKET = process.env.GLUE_ASSETS_BUCKET;
 const ACCOUNT_ID = process.env.ACCOUNT_ID;
 
-const SCRIPT_FILENAME = 'dcp-script.txt';
+const SCRIPT_FILENAME = 'dcp-script.py';
 const SCRIPT_KEY = `scripts/${SCRIPT_FILENAME}`;
 
 exports.handler = async(event, context) => {

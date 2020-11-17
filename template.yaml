@@ -710,7 +710,7 @@ Resources:
       Command:
         Name: glueetl
         PythonVersion: 3
-        ScriptLocation: !Sub 's3://${GlueAssetsBucket}/scripts/dcp-script.txt'
+        ScriptLocation: !Sub 's3://${GlueAssetsBucket}/scripts/dcp-script.py'
       DefaultArguments: 
         "--TempDir": !Sub "s3://${GlueAssetsBucket}/temporary/"
         "--class": "GlueApp"
